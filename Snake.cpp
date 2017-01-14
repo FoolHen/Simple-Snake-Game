@@ -3,7 +3,7 @@
 
 using namespace std;
 
-const int MAX=50;
+const int MAX=25;
 
 typedef int rows [MAX];
 typedef rows columns [MAX];
@@ -37,59 +37,58 @@ void new_apple(){
 }
 
 void move(){
-    int x=0;
-    int y=0;
-    switch(direction){
+    int x = 0;
+    int y = 0;
+    switch( direction ){
         case 0:
-            x=1;
+            x = 1;
             break;
         case 1:
-            y=-1;
+            y =- 1;
             break;
         case 2:
-            x=-1;
+            x = -1;
             break;
         case 3:
-            y=1;
+            y = 1;
             break;
         default: break;
     }
-    if(map[snake_x+x][snake_y+y]==0){
-        for(int i=0;i<MAX;i++){
-            for(int j=0;j<MAX;j++){
-                if(map[i][j]>0){
+    if( map[snake_x + x][snake_y + y] == 0 || map[snake_x + x][snake_y + y] == 1 ){
+        for( int i=0; i<MAX; i++ ){
+            for( int j=0; j<MAX; j++ ){
+                if( map[i][j]>0 ){
                    map[i][j]--;
-                   if (map[i][j]==0) cio << cursorxy(i+1, j+1)<<' ';
+                   if( map[i][j]==0 ) cio << cursorxy( i+1, j+1 )<<' ';
                 }
             }
         }
         map[snake_x+x][snake_y+y]=snake_lenght;
-        cio << cursorxy(snake_x+x+1, snake_y+y+1)<<char(219);
-        snake_x+=x;
-        snake_y+=y;
+        cio << cursorxy( snake_x+x+1, snake_y+y+1 )<<char(219);
+        snake_x += x;
+        snake_y += y;
     }
-    else if(map[snake_x+x][snake_y+y]==-2){
-            if(snake_lenght==(MAX-2)*(MAX-2)+1){
-                cio << cursorxy(4, MAX/2-1)<<"WINNER WINNER";
-                cio << cursorxy(4, MAX/2)<<"CHICKEN DINNER!";
+    else if( map[snake_x+x][snake_y+y] == -2 ){
+            if( snake_lenght == (MAX-2)*(MAX-2)+1 ){
+                cio << cursorxy( 4, MAX/2 - 1 )<<"WINNER WINNER";
+                cio << cursorxy( 4, MAX/2 )<<"CHICKEN DINNER!";
                 Sleep(1000);
-                stop=true;
+                stop = true;
             }
             else{
                 snake_lenght++;
                 map[snake_x+x][snake_y+y]=snake_lenght;
-                cio << cursorxy(snake_x+x+1, snake_y+y+1)<<char(219);
-                cio<<cursorxy(MAX+9, 2)<<snake_lenght-3;
+                cio << cursorxy( snake_x+x+1, snake_y+y+1 )<<char(219);
+                cio<<cursorxy( MAX+9, 2 )<<snake_lenght - 3;
 
                 new_apple();
 
-                snake_x+=x;
-                snake_y+=y;
+                snake_x += x;
+                snake_y += y;
             }
-
     }
     else {
-            stop=true;
+            stop = true;
     }
 }
 
@@ -132,7 +131,7 @@ void draw_map(){
                 cio<<' ';
 
             }else
-            cio<<char(219);
+            cio<<char(177);
 
         }
         cio<<endl;
@@ -143,7 +142,7 @@ void draw_map(){
 
 void time(){
 
-    int apple_x = aleatorio(MAX-2)+1; //aleatorio it's a randomizer function
+    int apple_x = aleatorio(MAX-2)+1; //aleatorio is a randomizer function
     int apple_y = aleatorio(MAX-2)+1;
     int score =0;
 
@@ -170,7 +169,8 @@ void time(){
                     if(direction!=0) direction = 2; //left
                     break;
                 case KEY_DOWN:
-                    if(direction!=1) direction = 3; //down
+                    if(direction!=1) direction = 3; //down    cio<<no_cursor;
+
                     break;
                 case KEY_RIGHT:
                     if(direction!=2) direction = 0; //right
@@ -199,7 +199,7 @@ void time(){
 
 int main()
 {
-    cio<<no_cursor;
+    cio << no_cursor;
 
     while(!finish){
 
@@ -215,7 +215,6 @@ int main()
         if(!finish){
             draw_map();
             time();
-
         }
 
         Sleep(1000);
