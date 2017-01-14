@@ -5,35 +5,41 @@ using namespace std;
 
 const int MAX=50;
 
-typedef int filas [MAX];
-typedef filas columnas [MAX];
-columnas mapa;
+typedef int rows [MAX];
+typedef rows columns [MAX];
+columns map;
 
 int snake_x;
 int snake_y;
-int dir;
-int longitud;
+int direction;
+int snake_lenght;
 bool finish = 0;
 bool stop;
-unsigned tecla;
+unsigned key_pressed;
 
-void dibujar_mapa();
+void draw_map();
+void new_apple();
+void move();
+void menu();
+void time();
+void fill_map();
+void draw_map();
 
-void nueva_manzana(){
-    int manzana_x;
-    int manzana_y;
+void new_apple(){
+    int apple_x;
+    int apple_y;
     do{
-        manzana_x = aleatorio(MAX-2)+1;
-        manzana_y = aleatorio(MAX-2)+1;
-    }while(mapa[manzana_x][manzana_y]!=0);
-    mapa[manzana_x][manzana_y]=-2;
-    cio << cursorxy(manzana_x+1, manzana_y+1)<<'O';
+        apple_x = aleatorio(MAX-2)+1;
+        apple_y = aleatorio(MAX-2)+1;
+    }while( map[apple_x][apple_y]!=0);
+    map[apple_x][apple_y]=-2;
+    cio << cursorxy(apple_x+1, apple_y+1)<<'O';
 }
 
-void mover(){
+void move(){
     int x=0;
     int y=0;
-    switch(dir){
+    switch(direction){
         case 0:
             x=1;
             break;
@@ -48,34 +54,34 @@ void mover(){
             break;
         default: break;
     }
-    if(mapa[snake_x+x][snake_y+y]==0){
+    if(map[snake_x+x][snake_y+y]==0){
         for(int i=0;i<MAX;i++){
             for(int j=0;j<MAX;j++){
-                if(mapa[i][j]>0){
-                   mapa[i][j]--;
-                   if (mapa[i][j]==0) cio << cursorxy(i+1, j+1)<<' ';
+                if(map[i][j]>0){
+                   map[i][j]--;
+                   if (map[i][j]==0) cio << cursorxy(i+1, j+1)<<' ';
                 }
             }
         }
-        mapa[snake_x+x][snake_y+y]=longitud;
+        map[snake_x+x][snake_y+y]=snake_lenght;
         cio << cursorxy(snake_x+x+1, snake_y+y+1)<<char(219);
         snake_x+=x;
         snake_y+=y;
     }
-    else if(mapa[snake_x+x][snake_y+y]==-2){
-            if(longitud==(MAX-2)*(MAX-2)+1){
+    else if(map[snake_x+x][snake_y+y]==-2){
+            if(snake_lenght==(MAX-2)*(MAX-2)+1){
                 cio << cursorxy(4, MAX/2-1)<<"WINNER WINNER";
                 cio << cursorxy(4, MAX/2)<<"CHICKEN DINNER!";
                 Sleep(1000);
                 stop=true;
             }
             else{
-                longitud++;
-                mapa[snake_x+x][snake_y+y]=longitud;
+                snake_lenght++;
+                map[snake_x+x][snake_y+y]=snake_lenght;
                 cio << cursorxy(snake_x+x+1, snake_y+y+1)<<char(219);
-                cio<<cursorxy(MAX+9, 2)<<longitud-3;
+                cio<<cursorxy(MAX+9, 2)<<snake_lenght-3;
 
-                nueva_manzana();
+                new_apple();
 
                 snake_x+=x;
                 snake_y+=y;
@@ -88,41 +94,41 @@ void mover(){
 }
 
 void menu (){
-	cio << "Pulsa cualquier tecla para jugar\n"
-        << "Pulsa ESC para salir\n\n"
-        <<"W-mover arriba\n"
-        <<"A-mover izda\n"
-        <<"D-mover derecha\n"
-        <<"s-mover abajo\n";
+	cio << "Press any key to continue\n"
+        << "Press ESC to exit\n\n"
+        << "W/UP - move up\n"
+        << "A/LEFT - move left\n"
+        << "D/RIGHT - move right\n"
+        << "S/DOWN - move down\n";
 
-	cio >> key(tecla);
-	if(tecla == KEY_ESC){
+	cio >> key(key_pressed);
+	if(key_pressed == KEY_ESC){
         finish = true;
 	}
     cio << clear_screen;
 
 }
 
-void rellenar_mapa()
+void fill_map()
 {
     for(int i=0;i<MAX;i++)
     {
         for(int j=0;j<MAX;j++)
         {
             if(i==0 || i==(MAX-1)|| j==(MAX-1)||j==0)
-                mapa[i][j]=-1;
-            else mapa[i][j]=0;
+                map[i][j]=-1;
+            else map[i][j]=0;
 
         }
 
     }
 }
-void dibujar_mapa(){
+void draw_map(){
     for(int i=0;i<MAX;i++)
     {
         for(int j=0;j<MAX;j++)
         {
-            if(mapa[i][j]==0){
+            if(map[i][j]==0){
                 cio<<' ';
 
             }else
@@ -135,75 +141,58 @@ void dibujar_mapa(){
     cio<<" SCORE: 0"<<endl;
 }
 
-void tiempo(){
+void time(){
 
-    int apple_x = aleatorio(MAX-2)+1;
+    int apple_x = aleatorio(MAX-2)+1; //aleatorio it's a randomizer function
     int apple_y = aleatorio(MAX-2)+1;
     int score =0;
 
-    /*int c = 0;
-    for(int i=1; i<MAX-1;i++){
-        for(int j=1; j<MAX-1;j++){
-            mapa[i][j]=longitud-2;
-            cio << cursorxy(i+1, j+1) << char(219);
-            longitud++;
-
-        }
-    }
-    longitud= longitud-2;
-    cio<<cursorxy(MAX-1, MAX-1)<<' ';
-    mapa[MAX-2][MAX-2]=0;
-    snake_x=MAX-3;
-    snake_y=MAX-2;
-    cio<<cursorxy(MAX-1, MAX-1)<<' ';*/
-
-    mapa[snake_x][snake_y]=3;
-    mapa[snake_x-1][snake_y]=2;
-    mapa[snake_x-2][snake_y]=1;
+    map[snake_x][snake_y]=3;
+    map[snake_x-1][snake_y]=2;
+    map[snake_x-2][snake_y]=1;
     cio << cursorxy(snake_x+1, snake_y+1) << char(219);
     cio << cursorxy(snake_x, snake_y+1) << char(219);
     cio << cursorxy(snake_x-1, snake_y+1) << char(219);
 
-    nueva_manzana();
+    new_apple();
 
     while(!stop){
         if (cio.kbhit()) {
-            cio >> key(tecla);
-            switch (tecla){
+            cio >> key(key_pressed);
+            switch (key_pressed){
                 case KEY_ESC:
                     stop=1;
                     break;
                 case KEY_UP:
-                    if(dir!=3) dir = 1; //arriba
+                    if(direction!=3) direction = 1; //up
                     break;
                 case KEY_LEFT:
-                    if(dir!=0) dir = 2; //izquierda
+                    if(direction!=0) direction = 2; //left
                     break;
                 case KEY_DOWN:
-                    if(dir!=1) dir = 3; //abajo
+                    if(direction!=1) direction = 3; //down
                     break;
                 case KEY_RIGHT:
-                    if(dir!=2) dir = 0; //derecha
+                    if(direction!=2) direction = 0; //right
                     break;
                 case 'w':
-                    if(dir!=3) dir = 1; //arriba
+                    if(direction!=3) direction = 1; //up
                     break;
                 case 'a':
-                    if(dir!=0) dir = 2; //izquierda
+                    if(direction!=0) direction = 2; //left
                     break;
                 case 's':
-                    if(dir!=1) dir = 3; //abajo
+                    if(direction!=1) direction = 3; //down
                     break;
                 case 'd':
-                    if(dir!=2) dir = 0; //derecha
+                    if(direction!=2) direction = 0; //right
                     break;
                 default:
                     break;
             }
         }
-        //c++;
-        Sleep(50);
-        mover();
+        Sleep(300);
+        move();
    }
    cio << cursorxy(1, MAX+1);
 }
@@ -218,14 +207,14 @@ int main()
         snake_y = MAX/2+2;
 
         stop=0;
-        longitud=3;
-        dir=0;
+        snake_lenght=3;
+        direction=0;
 
-        rellenar_mapa();
+        fill_map();
         menu();
         if(!finish){
-            dibujar_mapa();
-            tiempo();
+            draw_map();
+            time();
 
         }
 
